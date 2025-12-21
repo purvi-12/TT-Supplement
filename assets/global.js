@@ -1069,6 +1069,9 @@ class VariantSelects extends HTMLElement {
     this.addEventListener('change', (event) => {
       const target = this.getInputForEventTarget(event.target);
       this.updateSelectionMetadata(event);
+      //tt004 variant specific image code
+      this.filterVariantImages(target);
+      //tt004 variant specific image code end
 
       publish(PUB_SUB_EVENTS.optionValueSelectionChange, {
         data: {
@@ -1121,6 +1124,31 @@ class VariantSelects extends HTMLElement {
       ({ dataset }) => dataset.optionValueId
     );
   }
+  //tt004 variant specific image code
+  filterVariantImages(target){
+    const currentImgAlt = target?.value?.toLowerCase();
+    const thumbnails = document.querySelectorAll("[thumbnail-alt]");
+
+    let matchFound = false;
+
+    thumbnails.forEach((img) => {
+      const alt = img.getAttribute("thumbnail-alt")?.toLowerCase();
+      const tokens = alt
+        .split(',')
+        .map(t => t.trim());
+
+      const isMatch = currentImgAlt && tokens.includes(currentImgAlt);
+      // const isMatch = currentImgAlt && alt == currentImgAlt;
+      img.style.display = isMatch ? "block" : "none";
+      if (isMatch) {
+        matchFound = true;
+       }
+    });
+    if(!matchFound){
+      thumbnails.forEach((img)=> (img.style.display="block"));
+    }
+  }
+  //tt004 variant specific image code end
 }
 
 customElements.define('variant-selects', VariantSelects);
