@@ -1,12 +1,50 @@
 {{ 'section-image-banner.css' | asset_url | stylesheet_tag }}
 
-{%- if section.settings.image_height == 'adapt' and section.settings.image != blank -%}
+{% comment %} tt001 different images code {% endcomment %}
+{%- liquid
+  assign has_desktop_image = false
+  assign has_mobile_image = false
+
+  if section.settings.image != blank
+    assign has_desktop_image = true
+  endif
+
+  if section.settings.mobile_image != blank
+    assign has_mobile_image = true
+  endif
+
+  assign has_any_image = false
+  if has_desktop_image or has_mobile_image
+    assign has_any_image = true
+  endif
+-%}
+
+{%- if section.settings.image_height == 'adapt' and has_any_image -%}
+  {%- liquid
+    assign mobile_aspect = nil
+    if has_mobile_image
+      assign mobile_aspect = section.settings.mobile_image.aspect_ratio
+    endif
+
+    assign desktop_aspect = nil
+    if has_desktop_image
+      assign desktop_aspect = section.settings.image.aspect_ratio
+    endif
+
+    if mobile_aspect == nil or mobile_aspect == 0
+      assign mobile_aspect = desktop_aspect
+    endif
+
+    if desktop_aspect == nil or desktop_aspect == 0
+      assign desktop_aspect = mobile_aspect
+    endif
+  -%}
   {%- style -%}
     @media screen and (max-width: 749px) {
       #Banner-{{ section.id }}::before,
       #Banner-{{ section.id }} .banner__media::before,
       #Banner-{{ section.id }}:not(.banner--mobile-bottom) .banner__content::before {
-        padding-bottom: {{ 1 | divided_by: section.settings.image.aspect_ratio | times: 100 }}%;
+        padding-bottom: {{ 1 | divided_by: mobile_aspect | times: 100 }}%;
         content: '';
         display: block;
       }
@@ -15,13 +53,15 @@
     @media screen and (min-width: 750px) {
       #Banner-{{ section.id }}::before,
       #Banner-{{ section.id }} .banner__media::before {
-        padding-bottom: {{ 1 | divided_by: section.settings.image.aspect_ratio | times: 100 }}%;
+        padding-bottom: {{ 1 | divided_by: desktop_aspect | times: 100 }}%;
         content: '';
         display: block;
       }
     }
   {%- endstyle -%}
 {%- endif -%}
+
+{% comment %} tt001 different images code end {% endcomment %}
 
 {%- style -%}
   #Banner-{{ section.id }}::after {
@@ -55,9 +95,32 @@
   id="Banner-{{ section.id }}"
   class="banner banner--content-align-{{ section.settings.desktop_content_alignment }} banner--content-align-mobile-{{ section.settings.mobile_content_alignment }} banner--{{ section.settings.image_height }}{% if section.settings.stack_images_on_mobile and section.settings.image != blank and section.settings.image_2 != blank %} banner--stacked{% endif %}{% if section.settings.image_height == 'adapt' and section.settings.image != blank %} banner--adapt{% endif %}{% if section.settings.show_text_below %} banner--mobile-bottom{%- endif -%}{% if section.settings.show_text_box == false %} banner--desktop-transparent{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
 >
-  {%- if section.settings.image != blank -%}
-    <div class="banner__media media{% if section.settings.image == blank and section.settings.image_2 == blank %} placeholder{% endif %}{% if section.settings.image_2 != blank %} banner__media-half{% endif %}{% if section.settings.image_behavior != 'none' %} animate--{{ section.settings.image_behavior }}{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
+  {%- comment -%} tt001: Mobile-specific hero image (visible on mobile only) code{%- endcomment -%}
+  {%- if section.settings.mobile_image != blank -%}
+    <div class="banner__media media medium-hide large-up-hide{% if section.settings.image_behavior != 'none' %} animate--{{ section.settings.image_behavior }}{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
       {%- liquid
+        assign mobile_image_height = section.settings.mobile_image.width | divided_by: section.settings.mobile_image.aspect_ratio
+        assign mobile_sizes = '100vw'
+      -%}
+      {{
+        section.settings.mobile_image
+        | image_url: width: 3840
+        | image_tag:
+          width: section.settings.mobile_image.width,
+          height: mobile_image_height,
+          sizes: mobile_sizes,
+          widths: widths,
+          fetchpriority: fetch_priority
+      }}
+    </div>
+  {%- endif -%}
+  {%- comment -%} tt001: Mobile-specific hero image code end {%- endcomment -%}
+
+  {%- comment -%} tt001: Desktop hero image (hidden on mobile when mobile image exists)code {%- endcomment -%}
+  {%- if section.settings.image != blank -%}
+    <div class="banner__media media{% if section.settings.image == blank and section.settings.image_2 == blank %} placeholder{% endif %}{% if section.settings.image_2 != blank %} banner__media-half{% endif %}{% if section.settings.image_behavior != 'none' %} animate--{{ section.settings.image_behavior }}{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}{% if section.settings.mobile_image != blank %} small-hide{% endif %}">
+  
+    {%- liquid
         assign image_height = section.settings.image.width | divided_by: section.settings.image.aspect_ratio
         if section.settings.image_2 != blank
           assign image_class = 'banner__media-image-half'
@@ -83,10 +146,12 @@
       }}
     </div>
   {%- elsif section.settings.image_2 == blank -%}
-    <div class="banner__media media{% if section.settings.image == blank and section.settings.image_2 == blank %} placeholder{% endif %}{% if section.settings.image_2 != blank %} banner__media-half{% endif %}{% if section.settings.image_behavior != 'none' %} animate--{{ section.settings.image_behavior }}{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
+    <div class="banner__media media{% if section.settings.image == blank and section.settings.image_2 == blank %} placeholder{% endif %}{% if section.settings.image_2 != blank %} banner__media-half{% endif %}{% if section.settings.image_behavior != 'none' %} animate--{{ section.settings.image_behavior }}{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}{% if section.settings.mobile_image != blank %} small-hide{% endif %}">
       {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
     </div>
   {%- endif -%}
+  {%- comment -%} tt001: Desktop hero image (hidden on mobile when mobile image exists) code end{%- endcomment -%}
+
   {%- if section.settings.image_2 != blank -%}
     <div class="banner__media media{% if section.settings.image != blank %} banner__media-half{% endif %}{% if section.settings.image_behavior != 'none' %} animate--{{ section.settings.image_behavior }}{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
       {%- liquid
@@ -166,6 +231,14 @@
   </div>
 </div>
 
+{% comment %} // tt001 - schema
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile image"
+    },
+    // tt001 - schema end  {% endcomment %}
+
 {% schema %}
 {
   "name": "t:sections.image-banner.name",
@@ -184,6 +257,11 @@
       "type": "image_picker",
       "id": "image_2",
       "label": "t:sections.image-banner.settings.image_2.label"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile image"
     },
     {
       "type": "range",
