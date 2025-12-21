@@ -15,18 +15,18 @@
         "heading": {
           "type": "heading",
           "settings": {
-            "heading": "Browse our latest products",
-            "heading_size": "h0"
+            "heading": "Upgrade Your wellness",
+            "heading_size": "h1"
           }
         },
         "button": {
           "type": "buttons",
           "settings": {
-            "button_label_1": "Shop all",
+            "button_label_1": "SHOP NOW",
             "button_link_1": "shopify://collections/all",
             "button_style_secondary_1": true,
-            "button_label_2": "",
-            "button_link_2": "",
+            "button_label_2": "SEE COLLECTION",
+            "button_link_2": "shopify://collections",
             "button_style_secondary_2": false
           }
         }
@@ -38,11 +38,11 @@
       "settings": {
         "image": "shopify://shop_images/premium-supplement-hero-banner.png",
         "mobile_image": "shopify://shop_images/mobile-hero-banner-with-supplement-bottles-and-tablets.png",
-        "image_overlay_opacity": 40,
+        "image_overlay_opacity": 30,
         "image_height": "adapt",
         "image_behavior": "none",
-        "desktop_content_position": "bottom-center",
-        "desktop_content_alignment": "center",
+        "desktop_content_position": "bottom-left",
+        "desktop_content_alignment": "left",
         "show_text_box": false,
         "color_scheme": "scheme-3",
         "stack_images_on_mobile": false,
