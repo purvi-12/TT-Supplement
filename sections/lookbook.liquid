@@ -37,22 +37,23 @@
           role="dialog"
           aria-hidden="true"
         >
-          <img
-            src="{{ product.featured_image | image_url: width: 300 }}"
-            alt="{{ product.title | escape }}"
-            width="{{ product.featured_image.width }}"
-            height="{{ product.featured_image.height }}"
-            loading="lazy"
+          <p class="lookbook__product-title">
+            {{ product.title }}
+          </p>
+
+          <p class="lookbook__product-price">
+            {{ product.price | money }}
+          </p>
+
+          <a
+            href="{{ product.url }}"
+            class="lookbook__product-link"
           >
-          <h3>{{ product.title }}</h3>
-          <p>{{ product.price | money }}</p>
-          <a href="{{ product.url }}" class="button button--small">
             View product
           </a>
         </div>
       {% endif %}
     {% endfor %}
-
   </div>
 </section>
 
