@@ -1,0 +1,114 @@
+{% comment %} tt012 lookbook section [ 4 products user selected] {% endcomment %}
+ {{ 'lookbook.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'lookbook.js' | asset_url }}" defer></script>
+
+<section class="lookbook page-width" data-lookbook>
+  <div class="lookbook__image">
+
+    {% if section.settings.image %}
+      <img
+        src="{{ section.settings.image | image_url: width: 1600 }}"
+        alt="{{ section.settings.image.alt | escape }}"
+        width="{{ section.settings.image.width }}"
+        height="{{ section.settings.image.height }}"
+        loading="lazy"
+      >
+    {% endif %}
+
+    {% for block in section.blocks %}
+      {% assign product = block.settings.product %}
+      {% if product %}
+        <button
+          class="lookbook__pin"
+          data-pin
+          style="
+            --top: {{ block.settings.top }}%;
+            --left: {{ block.settings.left }}%;
+          "
+          aria-expanded="false"
+          aria-controls="popup-{{ block.id }}"
+        >
+          +
+        </button>
+
+        <div
+          class="lookbook__popup"
+          id="popup-{{ block.id }}"
+          role="dialog"
+          aria-hidden="true"
+        >
+          <img
+            src="{{ product.featured_image | image_url: width: 300 }}"
+            alt="{{ product.title | escape }}"
+            width="{{ product.featured_image.width }}"
+            height="{{ product.featured_image.height }}"
+            loading="lazy"
+          >
+          <h3>{{ product.title }}</h3>
+          <p>{{ product.price | money }}</p>
+          <a href="{{ product.url }}" class="button button--small">
+            View product
+          </a>
+        </div>
+      {% endif %}
+    {% endfor %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Lookbook",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Lookbook image"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Lookbook item",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Select product"
+        },
+        {
+          "type": "range",
+          "id": "top",
+          "label": "Pin top position (%)",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 30
+        },
+        {
+          "type": "range",
+          "id": "left",
+          "label": "Pin left position (%)",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 30
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lookbook",
+      "blocks": [
+        { "type": "item" },
+        { "type": "item" },
+        { "type": "item" },
+        { "type": "item" }
+      ]
+    }
+  ]
+}
+{% endschema %}
+{% comment %} tt012 lookbook section [ 4 products user selected] code end {% endcomment %}
