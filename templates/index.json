@@ -77,10 +77,58 @@
         "padding_top": 44,
         "padding_bottom": 36
       }
+    },
+    "lookbook_zALTap": {
+      "type": "lookbook",
+      "blocks": {
+        "item_jfaqhV": {
+          "type": "item",
+          "settings": {
+            "product": "",
+            "top": 30,
+            "left": 30
+          }
+        },
+        "item_pDAAJk": {
+          "type": "item",
+          "settings": {
+            "product": "",
+            "top": 30,
+            "left": 30
+          }
+        },
+        "item_KeNXKr": {
+          "type": "item",
+          "settings": {
+            "product": "",
+            "top": 30,
+            "left": 30
+          }
+        },
+        "item_dQpJ8P": {
+          "type": "item",
+          "settings": {
+            "product": "",
+            "top": 30,
+            "left": 30
+          }
+        }
+      },
+      "block_order": [
+        "item_jfaqhV",
+        "item_pDAAJk",
+        "item_KeNXKr",
+        "item_dQpJ8P"
+      ],
+      "name": "Lookbook",
+      "settings": {
+        "image": "shopify://shop_images/professional-supplement-hero-banner.png"
+      }
     }
   },
   "order": [
     "image_banner",
-    "featured_collection"
+    "featured_collection",
+    "lookbook_zALTap"
   ]
 }
