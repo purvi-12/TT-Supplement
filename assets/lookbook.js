@@ -18,8 +18,39 @@ document.addEventListener('click', (e) => {
 
   const popup = pin.nextElementSibling;
   popup.style.display = 'block';
-  popup.style.top = getComputedStyle(pin).top;
-  popup.style.left = getComputedStyle(pin).left;
+
+  // --- SMART POSITIONING ---
+  const pinRect = pin.getBoundingClientRect();
+  const popupRect = popup.getBoundingClientRect();
+  const containerRect = section.getBoundingClientRect();
+
+  let top =
+    pinRect.top -
+    containerRect.top -
+    popupRect.height -
+    10;
+
+  let left =
+    pinRect.left -
+    containerRect.left +
+    pinRect.width / 2 -
+    popupRect.width / 2;
+
+  // Clamp horizontally
+  const minLeft = 8;
+  const maxLeft = containerRect.width - popupRect.width - 8;
+  left = Math.max(minLeft, Math.min(left, maxLeft));
+
+  // If not enough space above → show below
+  if (top < 8) {
+    top =
+      pinRect.bottom -
+      containerRect.top +
+      10;
+  }
+
+  popup.style.top = `${top}px`;
+  popup.style.left = `${left}px`;
 
   pin.setAttribute('aria-expanded', 'true');
   popup.setAttribute('aria-hidden', 'false');

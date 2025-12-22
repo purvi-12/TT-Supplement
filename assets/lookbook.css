@@ -1,6 +1,5 @@
-/* =========================
-   Lookbook wrapper
-========================= */
+ /* tt012 lookbook section [ 4 products user selected] code  */
+
 .lookbook__image {
   position: relative;
 }
@@ -12,9 +11,6 @@
   display: block;
 }
 
-/* =========================
-   Pin / hotspot (base)
-========================= */
 .lookbook__pin {
   position: absolute;
   top: var(--top);
@@ -25,11 +21,9 @@
   cursor: pointer;
   z-index: 2;
 
-  /* defaults (overridable via inline CSS vars) */
   --pin-color: #ffffff;
 }
 
-/* Inner visual element */
 .lookbook__pin-inner {
   display: grid;
   place-items: center;
@@ -44,25 +38,18 @@
   position: relative;
 }
 
-/* =========================
-   Pin styles
-========================= */
-
-/* PLUS ICON (default look) */
 .lookbook__pin--plus .lookbook__pin-inner {
   width: 28px;
   height: 28px;
   font-size: 18px;
 }
 
-/* SOLID DOT */
 .lookbook__pin--dot .lookbook__pin-inner {
   width: 14px;
   height: 14px;
   font-size: 0;
 }
 
-/* RING WITH PULSE (PREMIUM LOOK) */
 .lookbook__pin--ring .lookbook__pin-inner {
   width: 12px;
   height: 12px;
@@ -70,7 +57,6 @@
   background: var(--pin-color);
 }
 
-/* Pulse ring */
 .lookbook__pin--ring .lookbook__pin-inner::after {
   content: "";
   position: absolute;
@@ -81,7 +67,6 @@
   animation: lookbook-pulse 1.6s infinite ease-out;
 }
 
-/* Pulse animation */
 @keyframes lookbook-pulse {
   0% {
     transform: scale(0.6);
@@ -93,15 +78,11 @@
   }
 }
 
-/* Pause pulse on hover/focus */
 .lookbook__pin:hover .lookbook__pin-inner::after,
 .lookbook__pin:focus-visible .lookbook__pin-inner::after {
   animation-play-state: paused;
 }
 
-/* =========================
-   Popup container
-========================= */
 .lookbook__popup {
   position: absolute;
   display: none;
@@ -135,4 +116,9 @@
   font-size: 13px;
   color: inherit;
   text-decoration: underline;
+}
+@media (max-width: 768px) {
+  .lookbook__popup {
+    max-width: calc(100vw - 16px);
+  }
 }
