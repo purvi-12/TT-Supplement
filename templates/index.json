@@ -122,7 +122,9 @@
       ],
       "name": "Lookbook",
       "settings": {
-        "image": "shopify://shop_images/professional-supplement-hero-banner.png"
+        "image": "shopify://shop_images/professional-supplement-hero-banner.png",
+        "pin_color": "#281717",
+        "pin_style": "ring"
       }
     }
   },
