@@ -1,4 +1,6 @@
-/* Lookbook wrapper */
+/* =========================
+   Lookbook wrapper
+========================= */
 .lookbook__image {
   position: relative;
 }
@@ -10,26 +12,96 @@
   display: block;
 }
 
-/* Pin / hotspot */
+/* =========================
+   Pin / hotspot (base)
+========================= */
 .lookbook__pin {
   position: absolute;
   top: var(--top);
   left: var(--left);
   transform: translate(-50%, -50%);
+  border: none;
+  background: none;
+  cursor: pointer;
+  z-index: 2;
+
+  /* defaults (overridable via inline CSS vars) */
+  --pin-color: #ffffff;
+}
+
+/* Inner visual element */
+.lookbook__pin-inner {
+  display: grid;
+  place-items: center;
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: #000;
-  color: #fff;
-  border: none;
-  cursor: pointer;
+  background: var(--pin-color);
+  color: #000;
   font-size: 18px;
+  font-weight: 600;
   line-height: 1;
-  display: grid;
-  place-items: center;
+  position: relative;
 }
 
-/* Popup container */
+/* =========================
+   Pin styles
+========================= */
+
+/* PLUS ICON (default look) */
+.lookbook__pin--plus .lookbook__pin-inner {
+  width: 28px;
+  height: 28px;
+  font-size: 18px;
+}
+
+/* SOLID DOT */
+.lookbook__pin--dot .lookbook__pin-inner {
+  width: 14px;
+  height: 14px;
+  font-size: 0;
+}
+
+/* RING WITH PULSE (PREMIUM LOOK) */
+.lookbook__pin--ring .lookbook__pin-inner {
+  width: 12px;
+  height: 12px;
+  font-size: 0;
+  background: var(--pin-color);
+}
+
+/* Pulse ring */
+.lookbook__pin--ring .lookbook__pin-inner::after {
+  content: "";
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  border: 2px solid var(--pin-color);
+  opacity: 0.6;
+  animation: lookbook-pulse 1.6s infinite ease-out;
+}
+
+/* Pulse animation */
+@keyframes lookbook-pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+/* Pause pulse on hover/focus */
+.lookbook__pin:hover .lookbook__pin-inner::after,
+.lookbook__pin:focus-visible .lookbook__pin-inner::after {
+  animation-play-state: paused;
+}
+
+/* =========================
+   Popup container
+========================= */
 .lookbook__popup {
   position: absolute;
   display: none;
@@ -63,10 +135,4 @@
   font-size: 13px;
   color: inherit;
   text-decoration: underline;
-}
-
-/* Hover / focus improvements */
-.lookbook__pin:hover,
-.lookbook__pin:focus-visible {
-  background: #333;
 }

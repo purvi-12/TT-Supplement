@@ -19,18 +19,19 @@
       {% assign product = block.settings.product %}
       {% if product %}
         <button
-          class="lookbook__pin"
+          class="lookbook__pin lookbook__pin--{{ section.settings.pin_style }}"
           data-pin
           style="
             --top: {{ block.settings.top }}%;
             --left: {{ block.settings.left }}%;
+            --pin-color: {{ section.settings.pin_color }};
           "
           aria-expanded="false"
           aria-controls="popup-{{ block.id }}"
         >
-          +
+          <span class="lookbook__pin-inner">+</span>
         </button>
-
+        
         <div
           class="lookbook__popup"
           id="popup-{{ block.id }}"
@@ -65,6 +66,23 @@
       "type": "image_picker",
       "id": "image",
       "label": "Lookbook image"
+    },
+    {
+      "type": "color",
+      "id": "pin_color",
+      "label": "Pin color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "select",
+      "id": "pin_style",
+      "label": "Pin style",
+      "options": [
+        { "value": "plus", "label": "Plus icon" },
+        { "value": "dot", "label": "Solid dot" },
+        { "value": "ring", "label": "Ring with pulse" }
+      ],
+      "default": "ring"
     }
   ],
   "blocks": [
