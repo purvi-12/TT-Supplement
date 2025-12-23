@@ -120,9 +120,60 @@
         "item_KeNXKr",
         "item_dQpJ8P"
       ],
+      "disabled": true,
       "name": "Lookbook",
       "settings": {
         "image": "shopify://shop_images/professional-supplement-hero-banner.png",
+        "pin_color": "#281717",
+        "pin_style": "ring"
+      }
+    },
+    "lookbook_collection_W3bbRY": {
+      "type": "lookbook-collection",
+      "blocks": {
+        "item_9PHqip": {
+          "type": "item",
+          "settings": {
+            "product_index": 3,
+            "top": 51,
+            "left": 39
+          }
+        },
+        "item_dBtKUB": {
+          "type": "item",
+          "settings": {
+            "product_index": 4,
+            "top": 50,
+            "left": 20
+          }
+        },
+        "item_aEaBjm": {
+          "type": "item",
+          "settings": {
+            "product_index": 2,
+            "top": 50,
+            "left": 75
+          }
+        },
+        "item_HDpfEU": {
+          "type": "item",
+          "settings": {
+            "product_index": 1,
+            "top": 48,
+            "left": 58
+          }
+        }
+      },
+      "block_order": [
+        "item_9PHqip",
+        "item_dBtKUB",
+        "item_aEaBjm",
+        "item_HDpfEU"
+      ],
+      "name": "Lookbook (Collection)",
+      "settings": {
+        "image": "shopify://shop_images/professional-supplement-hero-banner.png",
+        "collection": "special-products",
         "pin_color": "#281717",
         "pin_style": "ring"
       }
@@ -131,6 +182,7 @@
   "order": [
     "image_banner",
     "featured_collection",
-    "lookbook_zALTap"
+    "lookbook_zALTap",
+    "lookbook_collection_W3bbRY"
   ]
 }
