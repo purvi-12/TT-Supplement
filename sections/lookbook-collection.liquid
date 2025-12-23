@@ -1,0 +1,154 @@
+{% comment %} tt013 code [ lookbook - collection selected by user] {% endcomment %}
+{{ 'lookbook.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'lookbook.js' | asset_url }}" defer></script>
+
+<section class="lookbook page-width" data-lookbook>
+  <div class="lookbook__image">
+
+    {% if section.settings.image %}
+      <img
+        src="{{ section.settings.image | image_url: width: 1600 }}"
+        alt="{{ section.settings.image.alt | escape }}"
+        width="{{ section.settings.image.width }}"
+        height="{{ section.settings.image.height }}"
+        loading="lazy"
+      >
+    {% endif %}
+
+    {% assign collection = section.settings.collection %}
+
+    {% if collection != blank and collection.products_count > 0 %}
+      {% for block in section.blocks %}
+        {% assign product_index = block.settings.product_index | minus: 1 %}
+        {% assign product = collection.products[product_index] %}
+
+        {% if product %}
+          <button
+            class="lookbook__pin lookbook__pin--{{ section.settings.pin_style }}"
+            data-pin
+            style="
+              --top: {{ block.settings.top }}%;
+              --left: {{ block.settings.left }}%;
+              --pin-color: {{ section.settings.pin_color }};
+            "
+            aria-expanded="false"
+            aria-controls="popup-{{ block.id }}"
+          >
+            <span class="lookbook__pin-inner">+</span>
+          </button>
+
+          <div
+            class="lookbook__popup"
+            id="popup-{{ block.id }}"
+            role="dialog"
+            aria-hidden="true"
+          >
+            <p class="lookbook__product-title">
+              {{ product.title }}
+            </p>
+
+            <p class="lookbook__product-price">
+              {{ product.price | money }}
+            </p>
+
+            <a
+              href="{{ product.url }}"
+              class="lookbook__product-link"
+            >
+              View product
+            </a>
+          </div>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Lookbook (Collection)",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Lookbook image"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Select collection",
+      "info": "Products are taken in collection order"
+    },
+    {
+      "type": "color",
+      "id": "pin_color",
+      "label": "Pin color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "select",
+      "id": "pin_style",
+      "label": "Pin style",
+      "options": [
+        { "value": "plus", "label": "Plus icon" },
+        { "value": "dot", "label": "Solid dot" },
+        { "value": "ring", "label": "Ring with pulse" }
+      ],
+      "default": "ring"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Lookbook pin",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "range",
+          "id": "product_index",
+          "label": "Product position in collection",
+          "min": 1,
+          "max": 4,
+          "step": 1,
+          "default": 1,
+          "info": "1 = first product, 2 = second product, etc."
+        },
+        {
+          "type": "range",
+          "id": "top",
+          "label": "Pin top position (%)",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 30
+        },
+        {
+          "type": "range",
+          "id": "left",
+          "label": "Pin left position (%)",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 30
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lookbook (Collection)",
+      "blocks": [
+        { "type": "item" },
+        { "type": "item" },
+        { "type": "item" },
+        { "type": "item" }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+{% comment %}
+  tt013 lookbook section [ collection-based ] code end
+{% endcomment %}
