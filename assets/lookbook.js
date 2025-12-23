@@ -10,50 +10,54 @@ document.addEventListener('click', (e) => {
   const allPins = section.querySelectorAll('[data-pin]');
 
   const closeAll = () => {
-    allPopups.forEach(p => {
-      p.style.display = 'none';
-      p.style.top = '';
-      p.style.left = '';
-      p.style.bottom = '';
-      p.style.transform = '';
-      p.setAttribute('aria-hidden', 'true');
+    allPopups.forEach(popup => {
+      popup.style.display = 'none';
+      popup.style.position = '';
+      popup.style.top = '';
+      popup.style.left = '';
+      popup.style.bottom = '';
+      popup.style.transform = '';
+      popup.style.maxWidth = '';
+      popup.style.zIndex = '';
+      popup.setAttribute('aria-hidden', 'true');
     });
-    allPins.forEach(b => {
-      b.setAttribute('aria-expanded', 'false');
+
+    allPins.forEach(btn => {
+      btn.setAttribute('aria-expanded', 'false');
     });
   };
 
-  /* ----------------------------
+  /* ---------------------------------
      CASE 1: PIN CLICK (TOGGLE)
-  ---------------------------- */
+  --------------------------------- */
   if (pin) {
-    const targetPopup = pin.nextElementSibling;
+    const popup = pin.nextElementSibling;
     const isOpen = pin.getAttribute('aria-expanded') === 'true';
 
-    // Toggle off if same pin clicked
     if (isOpen) {
       closeAll();
       return;
     }
 
     closeAll();
-    targetPopup.style.display = 'block';
+    popup.style.display = 'block';
 
     const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
     if (isMobile) {
-      /* ---------- MOBILE SAFE ---------- */
-      targetPopup.style.position = 'fixed';
-      targetPopup.style.left = '50%';
-      targetPopup.style.bottom = '16px';
-      targetPopup.style.top = 'auto';
-      targetPopup.style.transform = 'translateX(-50%)';
-      targetPopup.style.maxWidth = 'calc(100vw - 32px)';
+      /* ---------- MOBILE: MODAL-LIKE ---------- */
+      popup.style.position = 'fixed';
+      popup.style.top = '50%';
+      popup.style.left = '50%';
+      popup.style.bottom = 'auto';
+      popup.style.transform = 'translate(-50%, -50%)';
+      popup.style.maxWidth = 'calc(100vw - 32px)';
+      popup.style.zIndex = '9999';
     } else {
-      /* ---------- DESKTOP SAFE ---------- */
+      /* ---------- DESKTOP: SMART TOOLTIP ---------- */
       const pinRect = pin.getBoundingClientRect();
       const sectionRect = section.getBoundingClientRect();
-      const popupRect = targetPopup.getBoundingClientRect();
+      const popupRect = popup.getBoundingClientRect();
 
       let top =
         pinRect.top -
@@ -80,27 +84,28 @@ document.addEventListener('click', (e) => {
           10;
       }
 
-      targetPopup.style.position = 'absolute';
-      targetPopup.style.top = `${top}px`;
-      targetPopup.style.left = `${left}px`;
-      targetPopup.style.transform = 'none';
+      popup.style.position = 'absolute';
+      popup.style.top = `${top}px`;
+      popup.style.left = `${left}px`;
+      popup.style.transform = 'none';
+      popup.style.zIndex = '20';
     }
 
     pin.setAttribute('aria-expanded', 'true');
-    targetPopup.setAttribute('aria-hidden', 'false');
+    popup.setAttribute('aria-hidden', 'false');
     return;
   }
 
-  /* ----------------------------
+  /* ---------------------------------
      CASE 2: CLICK INSIDE POPUP
      → DO NOTHING
-  ---------------------------- */
+  --------------------------------- */
   if (popupClicked) return;
 
-  /* ----------------------------
+  /* ---------------------------------
      CASE 3: CLICK IMAGE AREA
      → CLOSE POPUP
-  ---------------------------- */
+  --------------------------------- */
   if (imageClicked) {
     closeAll();
   }
