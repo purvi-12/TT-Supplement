@@ -11,6 +11,9 @@
 <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'quantity-popover.js' | asset_url }}" defer="defer"></script>
 
+{% comment %} tt015:upsell offers in cart drawer  {% endcomment %}
+<script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+
 <style>
   .drawer {
     visibility: hidden;
@@ -474,6 +477,43 @@
           <div id="CartDrawer-CartErrors" role="alert"></div>
         </form>
       </cart-drawer-items>
+
+      {% comment %} tt015 : upsell offers in cart code{% endcomment %}
+      {% assign cart_contains_upsell = false %}
+      {% for item in cart.items %}
+        {% if item.product.handle == 'now-foods-biotin-5-000-mcg-120-veg-	capsules' %}
+          {% assign cart_contains_upsell = true %}
+        {% endif %}
+
+      {% endfor %}
+
+      {% unless cart_contains_upsell %}
+      <div class="drawer__upsell">
+
+      <div class="drawer__upsell-headline">
+        Popular Add-Ons
+      </div>
+
+      <div class="drawer__upsell-product">
+        {% assign upsell_product = all_products['now-foods-biotin-5-000-mcg-120-veg-capsules'] %}
+        {% render 'card-product',
+              card_product: upsell_product,
+              quick_add: true,
+              horizontal_class:true,
+              horizontal_quick_add:true
+        %}
+      </div>
+      <style>
+        .drawer__upsell-product .card__content {
+          display: flex;
+          flex-direction: column;
+          align-self: center;
+        }
+      </style>
+      </div>
+      {% endunless %}
+    {% comment %} tt015 : upsell offers in cart code end{% endcomment %}
+
       <div class="drawer__footer">
         {%- if settings.show_cart_note -%}
           <details id="Details-CartDrawer">
