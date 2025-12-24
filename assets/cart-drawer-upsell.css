@@ -1,13 +1,20 @@
-/* TT015:Cart Drawer Upsell Carousel */
+/* ================================
+   Cart Drawer – Upsell Layout
+================================ */
+
+/* Wrapper spacing */
 .drawer__upsell {
   margin-top: 24px;
 }
 
+/* Headline */
 .drawer__upsell-headline {
   font-weight: 600;
+  font-size: 14px;
   margin-bottom: 12px;
 }
 
+/* Carousel container */
 .drawer__upsell-carousel {
   display: flex;
   gap: 12px;
@@ -16,7 +23,56 @@
   -webkit-overflow-scrolling: touch;
 }
 
-.drawer__upsell-carousel > * {
-  min-width: 75%;
+/* Individual upsell card */
+.drawer__upsell-carousel .card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  min-width: 85%;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 8px;
   scroll-snap-align: start;
+  background: #fff;
+}
+
+/* Image */
+.drawer__upsell-carousel .card__media {
+  width: 64px;
+  flex-shrink: 0;
+}
+
+.drawer__upsell-carousel .card__media img {
+  width: 64px;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Content */
+.drawer__upsell-carousel .card__content {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Title */
+.drawer__upsell-carousel .card__heading {
+  font-size: 13px;
+  line-height: 1.3;
+  margin: 0;
+}
+
+/* Price */
+.drawer__upsell-carousel .price {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Add to cart button */
+.drawer__upsell-carousel .quick-add__submit {
+  margin-top: 6px;
+  padding: 6px 10px;
+  font-size: 12px;
+  min-height: auto;
 }
