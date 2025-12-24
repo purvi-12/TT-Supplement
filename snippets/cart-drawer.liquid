@@ -8,6 +8,9 @@
 {{ 'quantity-popover.css' | asset_url | stylesheet_tag }}
 {{ 'component-card.css' | asset_url | stylesheet_tag }}
 
+{% comment %} TT015:Custom css {% endcomment %}
+{{ 'cart-drawer-upsell.css' | asset_url | stylesheet_tag }}
+
 <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'quantity-popover.js' | asset_url }}" defer="defer"></script>
 
@@ -478,7 +481,7 @@
         </form>
       </cart-drawer-items>
 
-      {% comment %} tt015 : upsell offers in cart code{% endcomment %}
+      {% comment %} tt015 : upsell offers in cart code for hardcoded [one product]
       {% assign cart_contains_upsell = false %}
       {% for item in cart.items %}
         {% if item.product.handle == 'now-foods-biotin-5-000-mcg-120-veg-capsules' %}
@@ -511,7 +514,47 @@
               }
           </style>
         </div>
-      {% endunless %}
+      {% endunless %}{% endcomment %}
+
+    {% comment %} tt015 : upsell offers in cart code [dynamic cart upsell]{% endcomment %}
+
+    {% assign upsell_collection = settings.cart_upsell_collection %}
+    {% assign upsell_limit = settings.cart_upsell_limit | default: 3 %}
+
+    {% if upsell_collection != blank %}
+
+      {% assign cart_handles = '' %}
+      {% for item in cart.items %}
+        {% assign cart_handles = cart_handles | append: item.product.handle | append: ',' %}
+      {% endfor %}
+
+      {% assign shown_count = 0 %}
+
+      <div class="drawer__upsell">
+        <div class="drawer__upsell-headline">
+          Popular Add-Ons
+        </div>
+
+        <div class="drawer__upsell-carousel">
+          {% for product in upsell_collection.products %}
+            {% unless cart_handles contains product.handle %}
+              {% if shown_count < upsell_limit %}
+
+                {% render 'card-product',
+                  card_product: product,
+                  quick_add: 'standard',
+                  horizontal_class: true,
+                  horizontal_quick_add: true
+                %}
+
+                {% assign shown_count = shown_count | plus: 1 %}
+              {% endif %}
+            {% endunless %}
+          {% endfor %}
+        </div>
+      </div>
+
+    {% endif %}
     {% comment %} tt015 : upsell offers in cart code end{% endcomment %}
 
       <div class="drawer__footer">

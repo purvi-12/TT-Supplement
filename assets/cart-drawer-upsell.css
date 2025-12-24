@@ -1,0 +1,22 @@
+/* TT015:Cart Drawer Upsell Carousel */
+.drawer__upsell {
+  margin-top: 24px;
+}
+
+.drawer__upsell-headline {
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.drawer__upsell-carousel {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.drawer__upsell-carousel > * {
+  min-width: 75%;
+  scroll-snap-align: start;
+}
