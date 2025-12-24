@@ -488,29 +488,29 @@
       {% endfor %}
 
       {% unless cart_contains_upsell %}
-      <div class="drawer__upsell">
+        <div class="drawer__upsell">
 
-      <div class="drawer__upsell-headline">
-        Popular Add-Ons
-      </div>
+          <div class="drawer__upsell-headline">
+            Popular Add-Ons
+          </div>
 
-      <div class="drawer__upsell-product">
-        {% assign upsell_product = all_products['now-foods-biotin-5-000-mcg-120-veg-capsules'] %}
-        {% render 'card-product',
-              card_product: upsell_product,
-              quick_add: 'standard',
-              horizontal_class:true,
-              horizontal_quick_add:true
-        %}
-      </div>
-      <style>
-        .drawer__upsell-product .card__content {
-          display: flex;
-          flex-direction: column;
-          align-self: center;
-        }
-      </style>
-      </div>
+          <div class="drawer__upsell-product">
+            {% assign upsell_product = all_products['now-foods-biotin-5-000-mcg-120-veg-capsules'] %}
+            {% render 'card-product',
+                  card_product: upsell_product,
+                  quick_add: 'standard',
+                  horizontal_class:true,
+                  horizontal_quick_add:true
+            %}
+          </div>
+            <style>
+              .drawer__upsell-product .card__content {
+                display: flex;
+                flex-direction: column;
+                align-self: center;
+              }
+          </style>
+        </div>
       {% endunless %}
     {% comment %} tt015 : upsell offers in cart code end{% endcomment %}
 
