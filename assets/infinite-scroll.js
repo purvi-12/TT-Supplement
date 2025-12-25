@@ -1,6 +1,7 @@
 (() => {
   class InfiniteScroll {
     constructor(container) {
+      console.log("inside js");
       this.container = container;
       this.sectionId = container.dataset.sectionId;
       this.grid = container.querySelector('#product-grid');
