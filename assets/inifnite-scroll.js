@@ -1,4 +1,3 @@
-// tt018 : Replace pagination with infinite scroll code
 (() => {
   class InfiniteScroll {
     constructor(section) {
@@ -8,15 +7,14 @@
       this.loader = section.querySelector('#InfiniteScrollLoader');
 
       this.loading = false;
-      this.nextPageUrl = this.getNextPageUrl();
+      this.page = this.getCurrentPage();
 
-      if (!this.grid || !this.sentinel || !this.nextPageUrl) return;
+      if (!this.grid || !this.sentinel) return;
 
       this.observer = new IntersectionObserver(
-        this.handleIntersect.bind(this),
+        this.onIntersect.bind(this),
         {
-          root: null,
-          rootMargin: '400px', // preload before user reaches bottom
+          rootMargin: '500px', // preload before user hits bottom
           threshold: 0.1
         }
       );
@@ -24,53 +22,54 @@
       this.observer.observe(this.sentinel);
     }
 
-    getNextPageUrl() {
-      const nextLink = this.section.querySelector('.pagination__next');
-      return nextLink ? nextLink.href : null;
+    getCurrentPage() {
+      const params = new URLSearchParams(window.location.search);
+      return parseInt(params.get('page') || '1', 10);
     }
 
-    async handleIntersect(entries) {
+    async onIntersect(entries) {
       const entry = entries[0];
-
-      if (!entry.isIntersecting || this.loading || !this.nextPageUrl) return;
+      if (!entry.isIntersecting || this.loading) return;
 
       this.loading = true;
       this.showLoader();
 
+      const nextPage = this.page + 1;
+      const url = new URL(window.location.href);
+      url.searchParams.set('page', nextPage);
+
       try {
-        const response = await fetch(this.nextPageUrl, {
+        const response = await fetch(url.toString(), {
           credentials: 'same-origin'
         });
 
         if (!response.ok) throw new Error('Network error');
 
-        const htmlText = await response.text();
-        const doc = new DOMParser().parseFromString(htmlText, 'text/html');
+        const text = await response.text();
+        const doc = new DOMParser().parseFromString(text, 'text/html');
 
         const newItems = doc.querySelectorAll(
           '#ProductGridContainer .grid__item'
         );
 
+        if (newItems.length === 0) {
+          // No more products → stop observing
+          this.observer.disconnect();
+          this.hideLoader();
+          return;
+        }
+
         newItems.forEach(item => {
           this.grid.appendChild(item);
         });
 
-        this.nextPageUrl = this.extractNextPageUrl(doc);
-
-        if (!this.nextPageUrl) {
-          this.observer.disconnect();
-        }
+        this.page = nextPage;
       } catch (error) {
-        console.error('[InfiniteScroll] Failed:', error);
+        console.error('[InfiniteScroll]', error);
       } finally {
         this.hideLoader();
         this.loading = false;
       }
-    }
-
-    extractNextPageUrl(doc) {
-      const nextLink = doc.querySelector('.pagination__next');
-      return nextLink ? nextLink.href : null;
     }
 
     showLoader() {
