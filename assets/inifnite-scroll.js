@@ -1,21 +1,22 @@
 (() => {
   class InfiniteScroll {
-    constructor(section) {
-      this.section = section;
-      this.grid = section.querySelector('#product-grid');
-      this.sentinel = section.querySelector('[data-infinite-scroll]');
-      this.loader = section.querySelector('#InfiniteScrollLoader');
+    constructor(container) {
+      this.container = container;
+      this.sectionId = container.dataset.sectionId;
+      this.grid = container.querySelector('#product-grid');
+      this.sentinel = container.querySelector('[data-infinite-scroll]');
+      this.loader = container.querySelector('#InfiniteScrollLoader');
 
       this.loading = false;
       this.page = this.getCurrentPage();
+      this.reachedEnd = false;
 
-      if (!this.grid || !this.sentinel) return;
+      if (!this.sectionId || !this.grid || !this.sentinel) return;
 
       this.observer = new IntersectionObserver(
         this.onIntersect.bind(this),
         {
-          root: null,
-          rootMargin: '500px', // preload before bottom
+          rootMargin: '600px',
           threshold: 0.1
         }
       );
@@ -29,14 +30,16 @@
     }
 
     async onIntersect(entries) {
-      if (!entries[0].isIntersecting || this.loading) return;
+      if (!entries[0].isIntersecting || this.loading || this.reachedEnd) return;
 
       this.loading = true;
       this.showLoader();
 
       const nextPage = this.page + 1;
       const url = new URL(window.location.href);
+
       url.searchParams.set('page', nextPage);
+      url.searchParams.set('section_id', this.sectionId);
 
       try {
         const response = await fetch(url.toString(), {
@@ -49,14 +52,14 @@
         const doc = new DOMParser().parseFromString(htmlText, 'text/html');
 
         const newGrid = doc.querySelector('#product-grid');
-        const newItems = newGrid ? newGrid.children : [];
+        const newItems = newGrid ? newGrid.querySelectorAll('li') : [];
 
-        if (!newItems || newItems.length === 0) {
-          this.stop();
+        if (newItems.length === 0) {
+          this.finish();
           return;
         }
 
-        Array.from(newItems).forEach(item => {
+        newItems.forEach(item => {
           this.grid.appendChild(item);
         });
 
@@ -69,9 +72,11 @@
       }
     }
 
-    stop() {
+    finish() {
+      this.reachedEnd = true;
       this.observer.disconnect();
       this.hideLoader();
+      this.addScrollToTop();
     }
 
     showLoader() {
@@ -81,11 +86,27 @@
     hideLoader() {
       if (this.loader) this.loader.hidden = true;
     }
+
+    addScrollToTop() {
+      if (document.getElementById('ScrollToTop')) return;
+
+      const btn = document.createElement('button');
+      btn.id = 'ScrollToTop';
+      btn.type = 'button';
+      btn.textContent = '↑ Back to top';
+      btn.className = 'scroll-to-top';
+
+      btn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      document.body.appendChild(btn);
+    }
   }
 
   const initInfiniteScroll = () => {
     document
-      .querySelectorAll('.product-grid-container')
+      .querySelectorAll('#ProductGridContainer[data-section-id]')
       .forEach(container => {
         if (container.querySelector('[data-infinite-scroll]')) {
           new InfiniteScroll(container);
