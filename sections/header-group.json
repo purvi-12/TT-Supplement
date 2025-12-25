@@ -14,6 +14,13 @@
     "announcement-bar": {
       "type": "announcement-bar",
       "blocks": {
+        "announcement_qfkyUq": {
+          "type": "announcement",
+          "settings": {
+            "text": "The \"Daily Trio\": Vitamin D3, Vitamin C, & Multivitamins – Shop Now.",
+            "link": ""
+          }
+        },
         "announcement_CCVArj": {
           "type": "announcement",
           "settings": {
@@ -30,6 +37,7 @@
         }
       },
       "block_order": [
+        "announcement_qfkyUq",
         "announcement_CCVArj",
         "announcement_FQdMWW"
       ],
