@@ -31,7 +31,9 @@ const initCollectionFeatures = () => {
       if (loader) loader.style.display = 'flex';
 
       try {
-        const response = await fetch(nextUrl);
+        // const response = await fetch(nextUrl);
+        const response = await fetch(`${nextUrl}&section_id=main-collection-product-grid`);
+
         const text = await response.text();
         const html = new DOMParser().parseFromString(text, 'text/html');
         
