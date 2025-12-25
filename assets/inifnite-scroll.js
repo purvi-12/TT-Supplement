@@ -2,7 +2,7 @@
   class InfiniteScroll {
     constructor(section) {
       this.section = section;
-      this.grid = section.querySelector('#ProductGridContainer');
+      this.grid = section.querySelector('#product-grid');
       this.sentinel = section.querySelector('[data-infinite-scroll]');
       this.loader = section.querySelector('#InfiniteScrollLoader');
 
@@ -14,7 +14,8 @@
       this.observer = new IntersectionObserver(
         this.onIntersect.bind(this),
         {
-          rootMargin: '500px', // preload before user hits bottom
+          root: null,
+          rootMargin: '500px', // preload before bottom
           threshold: 0.1
         }
       );
@@ -28,8 +29,7 @@
     }
 
     async onIntersect(entries) {
-      const entry = entries[0];
-      if (!entry.isIntersecting || this.loading) return;
+      if (!entries[0].isIntersecting || this.loading) return;
 
       this.loading = true;
       this.showLoader();
@@ -45,21 +45,18 @@
 
         if (!response.ok) throw new Error('Network error');
 
-        const text = await response.text();
-        const doc = new DOMParser().parseFromString(text, 'text/html');
+        const htmlText = await response.text();
+        const doc = new DOMParser().parseFromString(htmlText, 'text/html');
 
-        const newItems = doc.querySelectorAll(
-          '#ProductGridContainer .grid__item'
-        );
+        const newGrid = doc.querySelector('#product-grid');
+        const newItems = newGrid ? newGrid.children : [];
 
-        if (newItems.length === 0) {
-          // No more products → stop observing
-          this.observer.disconnect();
-          this.hideLoader();
+        if (!newItems || newItems.length === 0) {
+          this.stop();
           return;
         }
 
-        newItems.forEach(item => {
+        Array.from(newItems).forEach(item => {
           this.grid.appendChild(item);
         });
 
@@ -70,6 +67,11 @@
         this.hideLoader();
         this.loading = false;
       }
+    }
+
+    stop() {
+      this.observer.disconnect();
+      this.hideLoader();
     }
 
     showLoader() {
@@ -83,10 +85,10 @@
 
   const initInfiniteScroll = () => {
     document
-      .querySelectorAll('[data-section-type="main-collection-product-grid"]')
-      .forEach(section => {
-        if (section.querySelector('[data-infinite-scroll]')) {
-          new InfiniteScroll(section);
+      .querySelectorAll('.product-grid-container')
+      .forEach(container => {
+        if (container.querySelector('[data-infinite-scroll]')) {
+          new InfiniteScroll(container);
         }
       });
   };
