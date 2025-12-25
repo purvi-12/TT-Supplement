@@ -1,49 +1,50 @@
 /* ================================
-   Cart Drawer – Upsell Layout
+   Cart Drawer – Upsell (Refined)
 ================================ */
 
-/* Wrapper spacing */
 .drawer__upsell {
-  margin-top: 24px;
+  margin-top: 20px;
 }
 
-/* Headline */
 .drawer__upsell-headline {
+  font-size: 13px;
   font-weight: 600;
-  font-size: 14px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
+  color: #111;
 }
 
-/* Carousel container */
+/* Horizontal scroller */
 .drawer__upsell-carousel {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px;
 }
 
-/* Individual upsell card */
+/* Upsell item – NOT a card */
 .drawer__upsell-carousel .card {
-  display: flex;
+  display: grid;
+  grid-template-columns: 48px 1fr auto;
   align-items: center;
-  gap: 12px;
-  padding: 12px;
-  min-width: 85%;
-  border: 1px solid rgba(0,0,0,0.08);
-  border-radius: 8px;
+  gap: 10px;
+
+  min-width: 90%;
+  padding: 10px;
+
+  background: #fafafa;
+  border-radius: 6px;
   scroll-snap-align: start;
-  background: #fff;
 }
 
 /* Image */
 .drawer__upsell-carousel .card__media {
-  width: 64px;
-  flex-shrink: 0;
+  width: 48px;
 }
 
 .drawer__upsell-carousel .card__media img {
-  width: 64px;
+  width: 48px;
   height: auto;
   object-fit: contain;
 }
@@ -53,26 +54,39 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
-/* Title */
+/* Title – clamp to 2 lines */
 .drawer__upsell-carousel .card__heading {
-  font-size: 13px;
+  font-size: 12px;
   line-height: 1.3;
-  margin: 0;
+  font-weight: 500;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* Price */
 .drawer__upsell-carousel .price {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
+  color: #111;
 }
 
-/* Add to cart button */
+/* Button – secondary action */
 .drawer__upsell-carousel .quick-add__submit {
-  margin-top: 6px;
-  padding: 6px 10px;
-  font-size: 12px;
+  font-size: 11px;
+  padding: 4px 8px;
   min-height: auto;
+  white-space: nowrap;
+}
+
+/* Sold out state */
+.drawer__upsell-carousel .quick-add__submit[disabled],
+.drawer__upsell-carousel .quick-add__submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
