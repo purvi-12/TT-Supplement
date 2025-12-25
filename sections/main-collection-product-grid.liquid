@@ -182,9 +182,35 @@
               {%- endfor -%}
             </ul>
 
-            {%- if paginate.pages > 1 -%}
+            {% comment %} {%- if paginate.pages > 1 -%}
               {% render 'pagination', paginate: paginate, anchor: '' %}
-            {%- endif -%}
+            {%- endif -%} {% endcomment %}
+
+            {% comment %} tt018 : Replace pagination with infinite scroll code{% endcomment %}
+
+              {% if section.settings.enable_infinite_scroll %}
+                {{ 'component-infinite-scroll.css' | asset_url | stylesheet_tag }}
+                <script src="{{ 'infinite-scroll.js' | asset_url }}" defer></script>
+                <div
+                  id="InfiniteScrollSentinel"
+                  data-infinite-scroll
+                  aria-hidden="true"
+                ></div>
+
+                <div
+                  id="InfiniteScrollLoader"
+                  class="infinite-scroll__loader"
+                  hidden
+                  aria-live="polite"
+                >
+                  <span class="infinite-scroll__spinner" aria-hidden="true"></span>
+                  <span class="visually-hidden">Loading</span>
+                </div>
+              {% else %}
+                {% render 'pagination', paginate: paginate %}
+              {% endif %}
+
+             {% comment %} tt018 : Replace pagination with infinite scroll code end{% endcomment %}
           </div>
         {%- endif -%}
       </div>
@@ -200,6 +226,12 @@
   "name": "t:sections.main-collection-product-grid.name",
   "class": "section",
   "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_infinite_scroll",
+      "label": "Enable infinite scrolling",
+      "default": false
+    },
     {
       "type": "range",
       "id": "products_per_page",
