@@ -187,6 +187,7 @@
             {%- if paginate.pages > 1 -%}
               {% comment %} {% render 'pagination', paginate: paginate, anchor: '' %} {% endcomment %}
                {% comment %} tt018 : Replace pagination with infinite scroll code{% endcomment %}
+              {{ 'component-infinite-scroll.css' | asset_url | stylesheet_tag }}
                <script src="{{ 'infinite-scroll.js' | asset_url }}" defer="defer"></script>
                <div id="pagination-wrapper">
                 {%- if section.settings.enable_infinite_scroll -%}
@@ -201,6 +202,12 @@
                   {% render 'pagination', paginate: paginate, anchor: '' %}
                 {%- endif -%}
               </div>
+              {% comment %} Back to top button {% endcomment %}
+              <button id="BackToTop" class="back-to-top" aria-label="Back to top">
+                <span class="svg-wrapper">
+                  {{- 'icon-caret.svg' | inline_asset_content -}}
+                </span>
+              </button>
               {% comment %} tt018 : Replace pagination with infinite scroll code end{% endcomment %}
             {%- endif -%} 
           </div>
