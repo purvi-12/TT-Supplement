@@ -30,48 +30,46 @@
     }
 
     async onIntersect(entries) {
-      if (!entries[0].isIntersecting || this.loading || this.reachedEnd) return;
+    if (!entries[0].isIntersecting || this.loading || this.reachedEnd) return;
 
-      this.loading = true;
-      this.showLoader();
+    this.loading = true;
+    this.showLoader();
 
-      const nextPage = this.page + 1;
-      const url = new URL(window.location.href);
+    const nextPage = this.page + 1;
+    const url = new URL(window.location.pathname, window.location.origin);
+    url.searchParams.set('page', nextPage);
+    url.searchParams.set('section_id', 'main-collection-product-grid');
 
-      url.searchParams.set('page', nextPage);
-      url.searchParams.set('section_id', this.sectionId);
+    try {
+      const response = await fetch(url.toString(), {
+        credentials: 'same-origin'
+      });
 
-      try {
-        const response = await fetch(url.toString(), {
-          credentials: 'same-origin'
-        });
+      if (!response.ok) throw new Error('Network error');
 
-        if (!response.ok) throw new Error('Network error');
+      const htmlText = await response.text();
+      const doc = new DOMParser().parseFromString(htmlText, 'text/html');
 
-        const htmlText = await response.text();
-        const doc = new DOMParser().parseFromString(htmlText, 'text/html');
+      const newGrid = doc.querySelector('#product-grid');
+      const newItems = newGrid ? newGrid.querySelectorAll('li') : [];
 
-        const newGrid = doc.querySelector('#product-grid');
-        const newItems = newGrid ? newGrid.querySelectorAll('li') : [];
-
-        if (newItems.length === 0) {
-          this.finish();
-          return;
-        }
-
-        newItems.forEach(item => {
-          this.grid.appendChild(item);
-        });
-
-        this.page = nextPage;
-      } catch (error) {
-        console.error('[InfiniteScroll]', error);
-      } finally {
-        this.hideLoader();
-        this.loading = false;
+      if (newItems.length === 0) {
+        this.finish();
+        return;
       }
-    }
 
+      newItems.forEach(item => {
+        this.grid.appendChild(item);
+      });
+
+      this.page = nextPage;
+    } catch (error) {
+      console.error('[InfiniteScroll]', error);
+    } finally {
+      this.hideLoader();
+      this.loading = false;
+    }
+  }
     finish() {
       this.reachedEnd = true;
       this.observer.disconnect();
