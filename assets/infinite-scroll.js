@@ -13,11 +13,12 @@ const initCollectionFeatures = () => {
   if (isInfiniteEnabled && trigger) {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
+        // Trigger load when the user is 600px away from the bottom
         if (entry.isIntersecting && !loading) {
           loadMore();
         }
       });
-    }, { rootMargin: '0px 0px 600px 0px' }); // Pre-loads products 600px before bottom
+    }, { rootMargin: '0px 0px 600px 0px' }); 
 
     observer.observe(trigger);
 
@@ -37,17 +38,18 @@ const initCollectionFeatures = () => {
         const newProducts = html.querySelectorAll('#product-grid > li');
         const nextPagination = html.querySelector('#infinite-scroll-trigger');
 
-        // Append new items to the grid
+        // Append new items
         newProducts.forEach(li => grid.appendChild(li));
         
-        // Update browser URL for SEO and sharing
-        window.history.replaceState({}, '', nextUrl);
+        // --- REMOVED: window.history.replaceState ---
+        // Removing this ensures the URL stays at the base collection URL.
+        // Refreshing will now always start from the top.
 
         if (nextPagination && nextPagination.dataset.nextUrl) {
           trigger.dataset.nextUrl = nextPagination.dataset.nextUrl;
           loading = false;
         } else {
-          trigger.remove(); // No more products to load
+          trigger.remove(); 
         }
       } catch (err) {
         console.error('Failed to load products:', err);
@@ -73,8 +75,5 @@ const initCollectionFeatures = () => {
   }
 };
 
-// Run on initial load
 document.addEventListener('DOMContentLoaded', initCollectionFeatures);
-
-// Run when the section is re-rendered in the Theme Editor
 document.addEventListener('shopify:section:load', initCollectionFeatures);
