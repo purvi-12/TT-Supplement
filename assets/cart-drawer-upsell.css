@@ -1,6 +1,3 @@
-/* ================================
-   Cart Drawer – Upsell (Refined)
-================================ */
 
 .drawer__upsell {
   margin-top: 20px;
@@ -13,17 +10,16 @@
   color: #111;
 }
 
-/* Horizontal scroller */
+.drawer__upsell-carousel-wrapper {
+  position: relative;
+}
+
 .drawer__upsell-carousel {
   display: flex;
   gap: 10px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  padding-bottom: 4px;
+  overflow-x: hidden; 
 }
 
-/* Upsell item – NOT a card */
 .drawer__upsell-carousel .card {
   display: grid;
   grid-template-columns: 48px 1fr auto;
@@ -35,10 +31,8 @@
 
   background: #fafafa;
   border-radius: 6px;
-  scroll-snap-align: start;
 }
 
-/* Image */
 .drawer__upsell-carousel .card__media {
   width: 48px;
 }
@@ -49,7 +43,6 @@
   object-fit: contain;
 }
 
-/* Content */
 .drawer__upsell-carousel .card__content {
   padding: 0;
   display: flex;
@@ -57,7 +50,6 @@
   gap: 2px;
 }
 
-/* Title – clamp to 2 lines */
 .drawer__upsell-carousel .card__heading {
   font-size: 12px;
   line-height: 1.3;
@@ -69,14 +61,11 @@
   overflow: hidden;
 }
 
-/* Price */
 .drawer__upsell-carousel .price {
   font-size: 12px;
   font-weight: 600;
   color: #111;
 }
-
-/* Button – secondary action */
 .drawer__upsell-carousel .quick-add__submit {
   font-size: 11px;
   padding: 4px 8px;
@@ -84,9 +73,38 @@
   white-space: nowrap;
 }
 
-/* Sold out state */
 .drawer__upsell-carousel .quick-add__submit[disabled],
 .drawer__upsell-carousel .quick-add__submit:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.upsell-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  background: #fff;
+  cursor: pointer;
+  z-index: 2;
+  font-size: 16px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.upsell-nav--prev {
+  left: -6px;
+}
+
+.upsell-nav--next {
+  right: -6px;
+}
+
+.upsell-nav:hover {
+  background: #f5f5f5;
 }

@@ -535,23 +535,31 @@
           Popular Add-Ons
         </div>
 
+        <div class="drawer__upsell-carousel-wrapper">
+        <button class="upsell-nav upsell-nav--prev" aria-label="Previous">
+          &lsaquo;
+        </button>
+
         <div class="drawer__upsell-carousel">
           {% for product in upsell_collection.products %}
             {% unless cart_handles contains product.handle %}
               {% if shown_count < upsell_limit %}
-
                 {% render 'card-product',
                   card_product: product,
                   quick_add: 'standard',
                   horizontal_class: true,
                   horizontal_quick_add: true
                 %}
-
                 {% assign shown_count = shown_count | plus: 1 %}
               {% endif %}
             {% endunless %}
           {% endfor %}
         </div>
+
+        <button class="upsell-nav upsell-nav--next" aria-label="Next">
+          &rsaquo;
+        </button>
+      </div>
       </div>
 
     {% endif %}

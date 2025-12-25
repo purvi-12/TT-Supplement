@@ -292,3 +292,24 @@ if (!customElements.get('cart-note')) {
     }
   );
 }
+
+//tt015:add upsell offers in cart drawer
+document.addEventListener('click', function (e) {
+  const btn = e.target.closest('.upsell-nav');
+  if (!btn) return;
+
+  const wrapper = btn.closest('.drawer__upsell-carousel-wrapper');
+  if (!wrapper) return;
+
+  const carousel = wrapper.querySelector('.drawer__upsell-carousel');
+  if (!carousel) return;
+
+  const scrollAmount = carousel.offsetWidth * 0.9;
+
+  carousel.scrollBy({
+    left: btn.classList.contains('upsell-nav--next')
+      ? scrollAmount
+      : -scrollAmount,
+    behavior: 'smooth',
+  });
+});
