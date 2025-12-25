@@ -14,7 +14,7 @@
     "announcement-bar": {
       "type": "announcement-bar",
       "blocks": {
-        "announcement-bar-0": {
+        "announcement_FQdMWW": {
           "type": "announcement",
           "settings": {
             "text": "Welcome to our store",
@@ -23,11 +23,11 @@
         }
       },
       "block_order": [
-        "announcement-bar-0"
+        "announcement_FQdMWW"
       ],
       "settings": {
-        "auto_rotate": false,
-        "change_slides_speed": 5,
+        "auto_rotate": true,
+        "change_slides_speed": 10,
         "color_scheme": "scheme-1",
         "show_line_separator": true,
         "show_social": false,
