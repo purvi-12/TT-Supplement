@@ -22,7 +22,7 @@
 
 .drawer__upsell-carousel .card {
   display: grid;
-  grid-template-columns: 48px 1fr auto;
+  grid-template-columns: 72px 1fr auto;
   align-items: center;
   gap: 10px;
 
@@ -34,11 +34,11 @@
 }
 
 .drawer__upsell-carousel .card__media {
-  width: 48px;
+  width: 72px;
 }
 
 .drawer__upsell-carousel .card__media img {
-  width: 48px;
+  width: 72px;
   height: auto;
   object-fit: contain;
 }

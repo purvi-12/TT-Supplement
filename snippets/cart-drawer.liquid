@@ -519,7 +519,7 @@
     {% comment %} tt015 : upsell offers in cart code [dynamic cart upsell]{% endcomment %}
 
     {% assign upsell_collection = settings.cart_upsell_collection %}
-    {% assign upsell_limit = settings.cart_upsell_limit | default: 3 %}
+    {% assign upsell_limit = settings.cart_upsell_limit | default: 4 %}
 
     {% if upsell_collection != blank %}
 
