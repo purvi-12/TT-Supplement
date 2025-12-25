@@ -2,76 +2,77 @@
   class InfiniteScroll {
     constructor(container) {
       this.container = container;
-      this.sectionId = container.dataset.sectionId;
       this.grid = container.querySelector('#product-grid');
       this.sentinel = container.querySelector('[data-infinite-scroll]');
       this.loader = container.querySelector('#InfiniteScrollLoader');
 
+      this.page = 1;
       this.loading = false;
-      this.page = this.getCurrentPage();
-      this.reachedEnd = false;
+      this.done = false;
 
-      if (!this.sectionId || !this.grid || !this.sentinel) return;
+      if (!this.grid || !this.sentinel) return;
 
       this.observer = new IntersectionObserver(
-        this.onIntersect.bind(this),
-        {
-          rootMargin: '600px',
-          threshold: 0.1
-        }
+        entries => {
+          if (entries[0].isIntersecting) {
+            this.loadNextPage();
+          }
+        },
+        { rootMargin: '600px' }
       );
 
       this.observer.observe(this.sentinel);
     }
 
-    getCurrentPage() {
-      const params = new URLSearchParams(window.location.search);
-      return parseInt(params.get('page') || '1', 10);
-    }
+    async loadNextPage() {
+      if (this.loading || this.done) return;
 
-    async onIntersect(entries) {
-    if (!entries[0].isIntersecting || this.loading || this.reachedEnd) return;
+      this.loading = true;
+      this.showLoader();
 
-    this.loading = true;
-    this.showLoader();
+      const nextPage = this.page + 1;
 
-    const nextPage = this.page + 1;
-    const url = new URL(window.location.pathname, window.location.origin);
-    url.searchParams.set('page', nextPage);
-    url.searchParams.set('section_id', 'main-collection-product-grid');
+      const url = new URL(window.location.pathname, window.location.origin);
+      url.search = window.location.search;
+      url.searchParams.set('page', nextPage);
+      url.searchParams.set('sections', 'main-collection-product-grid');
 
-    try {
-      const response = await fetch(url.toString(), {
-        credentials: 'same-origin'
-      });
+      try {
+        const res = await fetch(url.toString(), {
+          credentials: 'same-origin'
+        });
 
-      if (!response.ok) throw new Error('Network error');
+        if (!res.ok) throw new Error('Network error');
 
-      const htmlText = await response.text();
-      const doc = new DOMParser().parseFromString(htmlText, 'text/html');
+        const json = await res.json();
+        const html = json['main-collection-product-grid'];
 
-      const newGrid = doc.querySelector('#product-grid');
-      const newItems = newGrid ? newGrid.querySelectorAll('li') : [];
+        if (!html) {
+          this.finish();
+          return;
+        }
 
-      if (newItems.length === 0) {
-        this.finish();
-        return;
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const newGrid = doc.querySelector('#product-grid');
+        const items = newGrid ? newGrid.querySelectorAll('li') : [];
+
+        if (!items.length) {
+          this.finish();
+          return;
+        }
+
+        items.forEach(item => this.grid.appendChild(item));
+        this.page = nextPage;
+      } catch (err) {
+        console.error('[InfiniteScroll]', err);
+      } finally {
+        this.hideLoader();
+        this.loading = false;
       }
-
-      newItems.forEach(item => {
-        this.grid.appendChild(item);
-      });
-
-      this.page = nextPage;
-    } catch (error) {
-      console.error('[InfiniteScroll]', error);
-    } finally {
-      this.hideLoader();
-      this.loading = false;
     }
-  }
+
     finish() {
-      this.reachedEnd = true;
+      this.done = true;
       this.observer.disconnect();
       this.hideLoader();
       this.addScrollToTop();
@@ -90,9 +91,8 @@
 
       const btn = document.createElement('button');
       btn.id = 'ScrollToTop';
-      btn.type = 'button';
-      btn.textContent = '↑ Back to top';
       btn.className = 'scroll-to-top';
+      btn.textContent = '↑ Back to top';
 
       btn.addEventListener('click', () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -102,9 +102,9 @@
     }
   }
 
-  const initInfiniteScroll = () => {
+  const init = () => {
     document
-      .querySelectorAll('#ProductGridContainer[data-section-id]')
+      .querySelectorAll('#ProductGridContainer')
       .forEach(container => {
         if (container.querySelector('[data-infinite-scroll]')) {
           new InfiniteScroll(container);
@@ -112,6 +112,6 @@
       });
   };
 
-  document.addEventListener('DOMContentLoaded', initInfiniteScroll);
-  document.addEventListener('shopify:section:load', initInfiniteScroll);
+  document.addEventListener('DOMContentLoaded', init);
+  document.addEventListener('shopify:section:load', init);
 })();
