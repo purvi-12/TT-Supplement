@@ -1,117 +1,72 @@
-(() => {
-  class InfiniteScroll {
-    constructor(container) {
-      this.container = container;
-      this.grid = container.querySelector('#product-grid');
-      this.sentinel = container.querySelector('[data-infinite-scroll]');
-      this.loader = container.querySelector('#InfiniteScrollLoader');
 
-      this.page = 1;
-      this.loading = false;
-      this.done = false;
+  (function() {
+    const initInfiniteScroll = () => {
+      const container = document.querySelector('#ProductGridContainer');
+      if (!container || container.dataset.infiniteScroll !== 'true') return;
 
-      if (!this.grid || !this.sentinel) return;
+      const grid = document.querySelector('#product-grid');
+      let trigger = document.querySelector('#infinite-scroll-trigger');
+      let loading = false;
 
-      this.observer = new IntersectionObserver(
-        entries => {
-          if (entries[0].isIntersecting) {
-            this.loadNextPage();
+      if (!trigger) return;
+
+      const observerOptions = {
+        root: null,
+        rootMargin: '0px 0px 600px 0px', // Starts loading 600px before reaching bottom
+        threshold: 0.01
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !loading) {
+            loadMoreProducts();
           }
-        },
-        { rootMargin: '600px' }
-      );
-
-      this.observer.observe(this.sentinel);
-    }
-
-    async loadNextPage() {
-      if (this.loading || this.done) return;
-
-      this.loading = true;
-      this.showLoader();
-
-      const nextPage = this.page + 1;
-
-      const url = new URL(window.location.pathname, window.location.origin);
-      url.search = window.location.search;
-      url.searchParams.set('page', nextPage);
-      url.searchParams.set('sections', 'main-collection-product-grid');
-
-      try {
-        const res = await fetch(url.toString(), {
-          credentials: 'same-origin'
         });
+      }, observerOptions);
 
-        if (!res.ok) throw new Error('Network error');
+      observer.observe(trigger);
 
-        const json = await res.json();
-        const html = json['main-collection-product-grid'];
+      async function loadMoreProducts() {
+        const nextUrl = trigger.dataset.nextUrl;
+        if (!nextUrl || loading) return;
 
-        if (!html) {
-          this.finish();
-          return;
+        loading = true;
+        const spinner = trigger.querySelector('.loading-overlay__spinner');
+        if (spinner) spinner.style.display = 'block';
+
+        try {
+          const response = await fetch(nextUrl);
+          const htmlText = await response.text();
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(htmlText, 'text/html');
+
+          const newProducts = doc.querySelectorAll('#product-grid > li');
+          const nextPagination = doc.querySelector('#infinite-scroll-trigger');
+
+          // Append products
+          newProducts.forEach(prod => grid.appendChild(prod));
+
+          // Update URL (SEO and Refresh friendly)
+          window.history.replaceState({}, '', nextUrl);
+
+          // Update trigger for next batch or remove if last page
+          if (nextPagination && nextPagination.dataset.nextUrl) {
+            trigger.dataset.nextUrl = nextPagination.dataset.nextUrl;
+            loading = false;
+          } else {
+            trigger.remove();
+          }
+        } catch (e) {
+          console.error('Infinite Scroll Error:', e);
+        } finally {
+          if (spinner) spinner.style.display = 'none';
         }
-
-        const doc = new DOMParser().parseFromString(html, 'text/html');
-        const newGrid = doc.querySelector('#product-grid');
-        const items = newGrid ? newGrid.querySelectorAll('li') : [];
-
-        if (!items.length) {
-          this.finish();
-          return;
-        }
-
-        items.forEach(item => this.grid.appendChild(item));
-        this.page = nextPage;
-      } catch (err) {
-        console.error('[InfiniteScroll]', err);
-      } finally {
-        this.hideLoader();
-        this.loading = false;
       }
-    }
+    };
 
-    finish() {
-      this.done = true;
-      this.observer.disconnect();
-      this.hideLoader();
-      this.addScrollToTop();
-    }
+    // Initialize on load
+    initInfiniteScroll();
 
-    showLoader() {
-      if (this.loader) this.loader.hidden = false;
-    }
-
-    hideLoader() {
-      if (this.loader) this.loader.hidden = true;
-    }
-
-    addScrollToTop() {
-      if (document.getElementById('ScrollToTop')) return;
-
-      const btn = document.createElement('button');
-      btn.id = 'ScrollToTop';
-      btn.className = 'scroll-to-top';
-      btn.textContent = '↑ Back to top';
-
-      btn.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
-
-      document.body.appendChild(btn);
-    }
-  }
-
-  const init = () => {
-    document
-      .querySelectorAll('#ProductGridContainer')
-      .forEach(container => {
-        if (container.querySelector('[data-infinite-scroll]')) {
-          new InfiniteScroll(container);
-        }
-      });
-  };
-
-  document.addEventListener('DOMContentLoaded', init);
-  document.addEventListener('shopify:section:load', init);
-})();
+    // Listen for Shopify Section Load (for Theme Customizer changes)
+    document.addEventListener('shopify:section:load', initInfiniteScroll);
+  })();

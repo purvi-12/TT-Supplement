@@ -120,7 +120,9 @@
       <div
         class="product-grid-container{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
         id="ProductGridContainer"
+        data-infinite-scroll="{{ section.settings.enable_infinite_scroll }}"
         data-section-id="main-collection-product-grid"
+
         {% if settings.animations_reveal_on_scroll %}
           data-cascade
         {% endif %}
@@ -182,36 +184,25 @@
                 {%- assign skip_card_product_styles = true -%}
               {%- endfor -%}
             </ul>
-
-            {% comment %} {%- if paginate.pages > 1 -%}
-              {% render 'pagination', paginate: paginate, anchor: '' %}
-            {%- endif -%} {% endcomment %}
-
-            {% comment %} tt018 : Replace pagination with infinite scroll code{% endcomment %}
-
-              {% if section.settings.enable_infinite_scroll %}
-                {{ 'component-infinite-scroll.css' | asset_url | stylesheet_tag }}
-                <script src="{{ 'infinite-scroll.js' | asset_url }}" defer></script>
-                <div
-                  id="InfiniteScrollSentinel"
-                  data-infinite-scroll
-                  aria-hidden="true"
-                ></div>
-
-                <div
-                  id="InfiniteScrollLoader"
-                  class="infinite-scroll__loader"
-                  hidden
-                  aria-live="polite"
-                >
-                  <span class="infinite-scroll__spinner" aria-hidden="true"></span>
-                  <span class="visually-hidden">Loading</span>
-                </div>
-              {% else %}
-                {% render 'pagination', paginate: paginate %}
-              {% endif %}
-
-             {% comment %} tt018 : Replace pagination with infinite scroll code end{% endcomment %}
+            {%- if paginate.pages > 1 -%}
+              {% comment %} {% render 'pagination', paginate: paginate, anchor: '' %} {% endcomment %}
+               {% comment %} tt018 : Replace pagination with infinite scroll code{% endcomment %}
+               <script src="{{ 'infinite-scroll.js' | asset_url }}" defer="defer"></script>
+               <div id="pagination-wrapper">
+                {%- if section.settings.enable_infinite_scroll -%}
+                  <div id="infinite-scroll-trigger" class="center" data-next-url="{{ paginate.next.url }}">
+                    <div class="loading-overlay__spinner" style="display: none; margin: 2rem auto;">
+                      <svg aria-hidden="true" focusable="false" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+                        <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+                      </svg>
+                    </div>
+                  </div>
+                {%- else -%}
+                  {% render 'pagination', paginate: paginate, anchor: '' %}
+                {%- endif -%}
+              </div>
+              {% comment %} tt018 : Replace pagination with infinite scroll code end{% endcomment %}
+            {%- endif -%} 
           </div>
         {%- endif -%}
       </div>
