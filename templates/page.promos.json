@@ -1,0 +1,10 @@
+// tt020 : Promo offer page code 
+{
+  "sections": {
+    "promo-grid": {
+      "type": "promo-grid"
+    }
+  },
+  "order": ["promo-grid"]
+}
+// tt020 : Promo offer page code end

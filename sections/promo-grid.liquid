@@ -1,0 +1,25 @@
+{% comment %} tt020 : Promo offer page {% endcomment %}
+{% assign today = 'now' | date: '%s' %}
+{% assign promos = shop.metaobjects.promo_offer.values %}
+
+<section class="promo-grid">
+  {% for promo in promos %}
+    {% assign start = promo.start_date | date: '%s' %}
+    {% assign end = promo.end_date | date: '%s' %}
+
+    {% if promo.show_on_promo_page and start <= today and end >= today %}
+      <div class="promo-card">
+        <h3>{{ promo.title }}</h3>
+
+        <div class="promo-desc">
+          {{ promo.description }}
+        </div>
+
+        <a href="{{ promo.cta_link }}" class="promo-cta">
+          Shop Now
+        </a>
+      </div>
+    {% endif %}
+  {% endfor %}
+</section>
+{% comment %} tt020 : Promo offer page code end{% endcomment %}
