@@ -1,0 +1,188 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "order": [
+    "image_banner",
+    "featured_collection",
+    "lookbook_zALTap",
+    "lookbook_collection_W3bbRY"
+  ],
+  "sections": {
+    "featured_collection": {
+      "settings": {
+        "collection": "all",
+        "color_scheme": "scheme-1",
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "description": "",
+        "description_style": "body",
+        "enable_desktop_slider": false,
+        "full_width": false,
+        "heading_size": "h2",
+        "image_ratio": "adapt",
+        "image_shape": "default",
+        "padding_bottom": 36,
+        "padding_top": 44,
+        "products_to_show": 8,
+        "quick_add": "none",
+        "show_description": false,
+        "show_rating": false,
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_view_all": true,
+        "swipe_on_mobile": false,
+        "title": "Featured products",
+        "view_all_style": "solid"
+      },
+      "type": "featured-collection"
+    },
+    "image_banner": {
+      "block_order": [
+        "heading",
+        "button"
+      ],
+      "blocks": {
+        "button": {
+          "settings": {
+            "button_label_1": "SHOP NOW",
+            "button_label_2": "SEE COLLECTION",
+            "button_link_1": "shopify://collections/all",
+            "button_link_2": "shopify://collections",
+            "button_style_secondary_1": true,
+            "button_style_secondary_2": false
+          },
+          "type": "buttons"
+        },
+        "heading": {
+          "settings": {
+            "heading": "Upgrade Your wellness",
+            "heading_size": "h1"
+          },
+          "type": "heading"
+        }
+      },
+      "settings": {
+        "color_scheme": "scheme-3",
+        "desktop_content_alignment": "left",
+        "desktop_content_position": "bottom-left",
+        "image": "shopify://shop_images/premium-supplement-hero-banner.png",
+        "image_behavior": "none",
+        "image_height": "adapt",
+        "image_overlay_opacity": 30,
+        "mobile_content_alignment": "left",
+        "mobile_image": "shopify://shop_images/mobile-hero-banner-with-supplement-bottles-and-tablets.png",
+        "show_text_below": false,
+        "show_text_box": false,
+        "stack_images_on_mobile": false
+      },
+      "type": "image-banner"
+    },
+    "lookbook_collection_W3bbRY": {
+      "block_order": [
+        "item_9PHqip",
+        "item_dBtKUB",
+        "item_aEaBjm",
+        "item_HDpfEU"
+      ],
+      "blocks": {
+        "item_9PHqip": {
+          "settings": {
+            "left": 39,
+            "product_index": 3,
+            "top": 51
+          },
+          "type": "item"
+        },
+        "item_HDpfEU": {
+          "settings": {
+            "left": 58,
+            "product_index": 1,
+            "top": 48
+          },
+          "type": "item"
+        },
+        "item_aEaBjm": {
+          "settings": {
+            "left": 75,
+            "product_index": 2,
+            "top": 50
+          },
+          "type": "item"
+        },
+        "item_dBtKUB": {
+          "settings": {
+            "left": 20,
+            "product_index": 4,
+            "top": 50
+          },
+          "type": "item"
+        }
+      },
+      "name": "Lookbook (Collection)",
+      "settings": {
+        "collection": "special-products",
+        "image": "shopify://shop_images/professional-supplement-hero-banner.png",
+        "pin_color": "#281717",
+        "pin_style": "ring"
+      },
+      "type": "lookbook-collection"
+    },
+    "lookbook_zALTap": {
+      "block_order": [
+        "item_jfaqhV",
+        "item_pDAAJk",
+        "item_KeNXKr",
+        "item_dQpJ8P"
+      ],
+      "blocks": {
+        "item_KeNXKr": {
+          "settings": {
+            "left": 58,
+            "product": "california-gold-nutrition-vitamin-d3-50-mcg-2-000-iu-90-fish-gelatin-softgels",
+            "top": 71
+          },
+          "type": "item"
+        },
+        "item_dQpJ8P": {
+          "settings": {
+            "left": 83,
+            "product": "eaa-plus",
+            "top": 51
+          },
+          "type": "item"
+        },
+        "item_jfaqhV": {
+          "settings": {
+            "left": 20,
+            "product": "now-foods-mega-d-3-mk-7-120-capsules",
+            "top": 62
+          },
+          "type": "item"
+        },
+        "item_pDAAJk": {
+          "settings": {
+            "left": 40,
+            "product": "21st-century-calcium-magnesium-zinc-d3-90-tablets",
+            "top": 52
+          },
+          "type": "item"
+        }
+      },
+      "disabled": true,
+      "name": "Lookbook",
+      "settings": {
+        "image": "shopify://shop_images/professional-supplement-hero-banner.png",
+        "pin_color": "#281717",
+        "pin_style": "ring"
+      },
+      "type": "lookbook"
+    }
+  }
+}
